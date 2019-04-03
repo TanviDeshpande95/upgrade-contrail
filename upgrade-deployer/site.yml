@@ -1,0 +1,57 @@
+---
+- hosts: localhost
+  #remote_user: root
+  tasks:
+  - name: Find all contrail rpm files in /tmp folder
+    find:
+      paths: "/tmp"
+      pattern: "*.rpm"
+    register: rpm_result
+  - debug:
+      var: rpm_result
+
+  - name: Install RPM 
+    yum:
+      name: "{{ item.path }}"
+      state: present
+    with_items: "{{ rpm_result.files }}"
+  - debug:
+      msg: "{{ rpm_result.files[0].path }}"
+
+  - name: Run setup.sh
+    command: chdir=/opt/contrail/contrail_packages ./setup.sh
+    tags:
+      - setup
+   
+  - name: Move testbed.py to the correct folder
+    command: cp inventory/testbed.py /opt/contrail/utils/fabfile/testbeds
+    tags:
+      - populate_testbed
+
+  - name: Run fabric commands to install packages
+    command: "chdir=/opt/contrail/utils/ fab install_pkg_all:{{ item }}"
+    with_items: 
+      - "{{ rpm_result.files[0].path }}"
+
+  - name: Cleanup yum.repos.d
+    shell: |
+      cd /opt/contrail/utils/ 
+      fab -R all -- "mv /etc/yum.repos.d/cobbler-config.repo /tmp/ ; echo pass"
+      fab -R all -- "mv /etc/yum.repos.d/CentOS-* /tmp/ ; echo pass"
+
+  - name: Install the contrail packages in each node of cluster
+    command: chdir=/opt/contrail/utils/ fab install_contrail
+    register: contrail_result
+  - debug:
+      var: contrail_result 
+
+  - name: Setup interfaces when there are multiple interfaces
+    command: chdir=/opt/contrail/utils/ fab setup_interface
+    tags:
+      - multiple_interface
+
+  - name: Provision the entire cluster
+    command: chdir=/opt/contrail/utils/ fab setup_all
+    register: provision_result
+  - debug:
+      var: provision_result
