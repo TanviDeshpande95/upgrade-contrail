@@ -1,0 +1,28 @@
+---
+- hosts: localhost
+  #remote_user: root
+  tasks:
+  - name: Install contrail recommended kernel and upgrade OS
+    command: sh inventory/upgrade_all.sh 
+  - name: Find all contrail rpm files in /tmp folder
+    find:
+      paths: "/tmp"
+      pattern: "*.rpm"
+    register: rpm_result
+  - debug:
+      var: rpm_result
+
+  - name: Install RPM 
+    yum:
+      name: "{{ item.path }}"
+      state: present
+    with_items: "{{ rpm_result.files }}"
+  - debug:
+      msg: "{{ rpm_result.files[0].path }}"
+
+  - name: Run setup.sh
+    command: chdir=/opt/contrail/contrail_packages ./setup.sh
+    tags:
+      - setup
+
+  

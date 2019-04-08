@@ -53,5 +53,9 @@
   - name: Provision the entire cluster
     command: chdir=/opt/contrail/utils/ fab setup_all
     register: provision_result
-  - debug:
-      var: provision_result
+
+  - name: Delete the 3.2.11 rpm files
+    file:
+      path: "{{ item }}"
+      state: absent
+    with_items: "{{ rpm_result.files[0].path }}"
