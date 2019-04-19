@@ -4,6 +4,10 @@
   tasks:
   - name: Install contrail recommended kernel and upgrade OS
     command: sh inventory/upgrade_all.sh 
+    register: upgrade
+  - debug:
+      var: upgrade
+
   - name: Find all contrail rpm files in /tmp folder
     find:
       paths: "/tmp"
