@@ -5,16 +5,14 @@
   - name: Install contrail recommended kernel and upgrade OS
     command: sh inventory/upgrade_all.sh 
     register: upgrade
-  - debug:
-      var: upgrade
+    tags:
+     - upgrade
 
   - name: Find all contrail rpm files in /tmp folder
     find:
       paths: "/tmp"
       pattern: "*.rpm"
-    register: rpm_result
-  - debug:
-      var: rpm_result
+    register: rpm_result1
     tags:
       - find
 
@@ -22,9 +20,7 @@
     yum:
       name: "{{ item.path }}"
       state: present
-    with_items: "{{ rpm_result.files }}"
-  - debug:
-      msg: "{{ rpm_result.files[0].path }}"
+    with_items: "{{ rpm_result1.files }}"
     tags:
       - install
 
@@ -57,7 +53,5 @@
   - name: Upgrade contrail 
     command: "{{item}}"
     with_items:
-      - cd /opt/contrail/utils
-      - fab upgrade_contrail:{{version}},{{rpm_result.files[0].path}}; 
-    tags:
-      - upgrade_contrail 
+      - cd /opt/contrail/utils; \
+      - fab upgrade_contrail:"{{ version }}","{{ rpm_result1.files }}" ; 
