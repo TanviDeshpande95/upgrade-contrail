@@ -15,6 +15,8 @@
     register: rpm_result
   - debug:
       var: rpm_result
+    tags:
+      - find
 
   - name: Install RPM 
     yum:
@@ -23,10 +25,39 @@
     with_items: "{{ rpm_result.files }}"
   - debug:
       msg: "{{ rpm_result.files[0].path }}"
+    tags:
+      - install
 
   - name: Run setup.sh
     command: chdir=/opt/contrail/contrail_packages ./setup.sh
     tags:
       - setup
 
-  
+  - name: Stop contrail services
+    service:
+       name: "{{item}}"
+       state: stopped
+    with_items: 
+      - supervisor-vrouter 
+      - supervisor-control 
+      - supervisor-analytics 
+      - supervisor-config
+      - supervisor-webui
+      - supervisor-database 
+      - contrail-database
+    tags:
+      - stop_services
+
+  - name: Find contrail version
+    command: contrail-version | grep contrail-web-core | awk '{print $2}'
+    register: version
+    tags:
+      - get_version
+
+  - name: Upgrade contrail 
+    command: "{{item}}"
+    with_items:
+      - cd /opt/contrail/utils
+      - fab upgrade_contrail:{{version}},{{rpm_result.files[0].path}}; 
+    tags:
+      - upgrade_contrail 
