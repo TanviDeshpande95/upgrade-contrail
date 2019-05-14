@@ -44,14 +44,11 @@
     tags:
       - stop_services
 
-  - name: Find contrail version
-    command: contrail-version | grep contrail-web-core | awk '{print $2}'
-    register: version
-    tags:
-      - get_version
-
   - name: Upgrade contrail 
-    command: "{{item}}"
-    with_items:
-      - cd /opt/contrail/utils; \
-      - fab upgrade_contrail:"{{ version }}","{{ rpm_result1.files }}" ; 
+    vers: "{{ version }}" 
+    shell: |
+      cd /opt/contrail/utils
+      fab upgrade_contrail:{{ version }},"{{ item.path }}"
+    with_items: "{{ rpm_result1.files }}"
+    tags:
+     - upgrade_contrail
