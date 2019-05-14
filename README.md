@@ -30,6 +30,6 @@ Installing Contrail
  
  1. Download and copy rpm of the new version to be installed to /tmp
  2. Run the upgrade_contrail playbook:
-    ansible-playbook upgrade_contrail.yml -e version=<version upgrading from>
+    ansible-playbook upgrade_contrail.yml -e version= <version upgrading from>
  3. Verify contrail-status at the end of the playbook to make sure all services are up.
     
