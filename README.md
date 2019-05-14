@@ -6,7 +6,7 @@ Automating upgrading contrail services between different versions
 
 Tested with:
 CentOS 7.4-1708
-
+Upgrade between minor versions
 
 Tools:
 Ansible
@@ -25,4 +25,11 @@ Installing Contrail
 4. Run install_contrail.yml playbook
    cd /root/upgrade-contrail/upgrade-deployer
    ansible-playbook install_contrail.yml
+  
+ Upgrading Contrail
+ 
+ 1. Download and copy rpm of the new version to be installed to /tmp
+ 2. Run the upgrade_contrail playbook:
+    ansible-playbook upgrade_contrail.yml -e version=<version upgrading from>
+ 3. Verify contrail-status at the end of the playbook to make sure all services are up.
     
