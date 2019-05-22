@@ -1,0 +1,19 @@
+---
+- hosts: localhost
+  #remote_user: root
+  tasks:
+  - name: pull contrail-ansible-deployer
+    git:
+      repo: https://github.com/Juniper/contrail-ansible-deployer.git
+      dest: /tmp/ansible1
+      version: "{{ branch }}"
+    run_once: true
+    tags:
+     - pull
+  - name: Run playbooks to install new contrail-cluster
+    script: inventory/install-5.x.sh
+    register: out 
+    run_once: true
+  - debug:
+     var: out
+     verbosity: 2

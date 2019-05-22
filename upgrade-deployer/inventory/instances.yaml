@@ -1,0 +1,94 @@
+global_configuration:
+  CONTAINER_REGISTRY: hub.juniper.net/contrail
+  CONTAINER_REGISTRY_USERNAME: JNPR-Customer67
+  CONTAINER_REGISTRY_PASSWORD: MKvD485wUA73zdPbgymC
+provider_config:
+  bms:
+    ssh_user: root
+    ssh_pwd: c0ntrail123
+    ntpserver: 10.84.5.100
+    domainsuffix: local
+instances:
+  contrail-r2ru30b2-control-vm1:
+    ip: 172.16.55.26
+    ssh_user: root
+    ssh_pwd: c0ntrail123
+    provider: bms
+    roles:
+      config:
+      config_database:
+      control:
+  contrail-r2ru30b2-control-vm2:
+    ip: 172.16.55.27
+    ssh_user: root
+    ssh_pwd: c0ntrail123
+    provider: bms
+    roles:
+      config:
+      config_database:
+      control:
+  contrail-r2ru30b2-control-vm3:
+    ip: 172.16.55.28
+    ssh_user: root
+    ssh_pwd: c0ntrail123
+    provider: bms
+    roles:
+      config:
+      config_database:
+      control:
+  contrail-r2ru30b2-analytic-vm1:
+    ip: 172.16.55.29
+    ssh_user: root
+    ssh_pwd: c0ntrail123
+    provider: bms
+    roles:
+      webui:
+      analytics:
+      analytics_database:
+  contrail-r2ru30b4-analytic-vm2:
+    ip: 172.16.55.30
+    ssh_user: root
+    ssh_pwd: c0ntrail123
+    provider: bms
+    roles:
+      webui:
+      analytics:
+      analytics_database:
+  contrail-r2ru30b2-analytic-vm3:
+    ip: 172.16.55.31
+    ssh_user: root
+    ssh_pwd: c0ntrail123
+    provider: bms
+    roles:
+      webui:
+      analytics:
+      analytics_database:
+contrail_configuration:
+  CONTRAIL_VERSION: 5.1.0-0.38-queens
+  CLOUD_ORCHESTRATOR: openstack
+  RABBITMQ_NODE_PORT: 5673
+  VROUTER_GATEWAY: 172.16.55.1
+  AUTH_MODE: keystone
+  #KEYSTONE_AUTH_PROTO: https
+  KEYSTONE_AUTH_URL_VERSION: /v3
+  KEYSTONE_AUTH_ADMIN_TENANT: admin
+  KEYSTONE_AUTH_ADMIN_USER: admin
+  KEYSTONE_AUTH_ADMIN_PASSWORD: c0ntrail123
+  KEYSTONE_AUTH_ADMIN_HOST: 172.16.55.20
+  CONTROLLER_NODES: 172.16.55.26,172.16.55.27,172.16.55.28
+  ANALYTICS_NODES: 172.16.55.29,172.16.55.30,172.16.55.31
+  ANALYTICSDB_NODES: 172.16.55.29,172.16.55.30,172.16.55.31
+  CONTROL_NODES: 172.16.55.26,172.16.55.27,172.16.55.28
+  UPGRADE_KERNEL: true
+kolla_config:
+  kolla_globals:
+    enable_haproxy: yes
+    kolla_internal_vip_address: 172.16.55.20
+    kolla_external_vip_address: 10.10.16.240
+    enable_ironic: no
+    enable_swift: no
+    keepalived_virtual_router_id: 55
+  kolla_passwords:
+    keystone_admin_password: c0ntrail123
+    metadata_secret: c0ntrail123
+
