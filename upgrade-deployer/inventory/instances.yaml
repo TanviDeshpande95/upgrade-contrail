@@ -6,7 +6,7 @@ provider_config:
   bms:
     ssh_user: root
     ssh_pwd: c0ntrail123
-    ntpserver: 10.84.5.100
+    ntpserver: 10.10.16.170
     domainsuffix: local
 instances:
   contrail-r2ru30b2-control-vm1:
@@ -54,7 +54,7 @@ instances:
       webui:
       analytics:
       analytics_database:
-  contrail-r2ru30b2-analytic-vm3:
+  contrail-r2ru30b4-analytic-vm3:
     ip: 172.16.55.31
     ssh_user: root
     ssh_pwd: c0ntrail123
@@ -64,7 +64,7 @@ instances:
       analytics:
       analytics_database:
 contrail_configuration:
-  CONTRAIL_VERSION: 5.1.0-0.38-queens
+  CONTRAIL_VERSION: 5.1.0-0.38
   CLOUD_ORCHESTRATOR: openstack
   RABBITMQ_NODE_PORT: 5673
   VROUTER_GATEWAY: 172.16.55.1
