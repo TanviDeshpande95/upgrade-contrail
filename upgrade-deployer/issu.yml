@@ -17,3 +17,10 @@
   - debug:
      var: out
      verbosity: 2
+  - name : Run playbooks
+    command: ansible-playbook -i /tmp/ansible1/inventory/ -e orchestrator=openstack /tmp/ansible1/playbooks/configure_instances.yml
+    register: out1
+    tags: 
+     - configure
+  - debug:
+     var: out1.stdout
